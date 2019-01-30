@@ -80,6 +80,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(color: Colors.white, fontSize: 50),
                   ),
                 )),
+                Container(
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: Text('Made with ♥ by Alif', style: TextStyle(color: Colors.white30, fontSize: 15),),
+                )
           ],
         ),
       ),

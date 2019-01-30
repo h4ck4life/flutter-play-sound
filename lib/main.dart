@@ -66,15 +66,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
-              padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
-              onPressed: _playBellSound,
-              color: _buttonColor,
-              child: Text(
-                _buttonLabel,
-                style: TextStyle(color: Colors.white, fontSize: 50),
-              ),
-            ),
+            RaisedButton.icon(
+                icon: Icon(
+                  Icons.alarm,
+                  size: 50,
+                ),
+                onPressed: _playBellSound,
+                color: _buttonColor,
+                label: Container(
+                  padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
+                  child: Text(
+                    _buttonLabel,
+                    style: TextStyle(color: Colors.white, fontSize: 50),
+                  ),
+                )),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:audioplayers/audio_cache.dart";
 import 'package:audioplayers/audioplayers.dart';
+import 'package:sensors/sensors.dart';
 
 AudioCache audioCache = new AudioCache();
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         primarySwatch: Colors.green,
       ),
-      home: MyHomePage(title: 'Bunyi Loceng'),
+      home: MyHomePage(title: 'Handbell'),
     );
   }
 }
@@ -34,7 +35,15 @@ class _MyHomePageState extends State<MyHomePage> {
   String _buttonLabel = 'Ring!';
   MaterialColor _buttonColor = Colors.green;
   AudioPlayer _audioPlayer;
+  bool _bellSwitch = false;
+  Color _bellColor = Colors.black54;
+
   bool _isPlaying = false;
+
+  void _playDingOnce() async {
+    audioCache.play('DeskBell.mp3');
+  }
+
   void _playBellSound() async {
     if (_isPlaying == false) {
       setState(() => _isPlaying = true);
@@ -57,6 +66,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    accelerometerEvents.listen((AccelerometerEvent event) {
+      //print(event.toString());
+      if (_bellSwitch) {
+        if (event.x > 5.0 || event.x < -5.0) {
+          //_playBellSound();
+          _playDingOnce();
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton.icon(
+            /* RaisedButton.icon(
                 icon: Icon(
                   Icons.alarm,
                   size: 50,
@@ -79,11 +102,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     _buttonLabel,
                     style: TextStyle(color: Colors.white, fontSize: 50),
                   ),
-                )),
-                Container(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: Text('Made with ♥ by Alif', style: TextStyle(color: Colors.white30, fontSize: 15),),
-                )
+                )), */
+            GestureDetector(
+              onTap: () {
+                if (_bellSwitch) {
+                  setState(() => _bellSwitch = false);
+                  setState(() => _bellColor = Colors.black54);
+                } else {
+                  setState(() => _bellSwitch = true);
+                  setState(() => _bellColor = Colors.transparent);
+                }
+              },
+              child: Image.asset('bell.png',
+                  colorBlendMode: BlendMode.srcATop, color: _bellColor),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+              child: Text(
+                'Made with ♥ by Alif',
+                style: TextStyle(color: Colors.white30, fontSize: 15),
+              ),
+            )
           ],
         ),
       ),

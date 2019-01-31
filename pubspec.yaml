@@ -1,5 +1,5 @@
-name: bunyi_loceng
-description: A new Flutter project.
+name: Handbell
+description: Bell ringer
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -14,6 +14,7 @@ environment:
 
 dependencies:
   audioplayers: ^0.8.0
+  sensors: ^0.4.0
   flutter:
     sdk: flutter
 
@@ -42,6 +43,8 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
     - Handbell-sound.mp3
+    - DeskBell.mp3
+    - bell.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

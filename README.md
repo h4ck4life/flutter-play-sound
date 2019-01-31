@@ -2,5 +2,4 @@
 
 Experimental project to learn Flutter framework.
 
-## Getting Started
-
+Contact: [@h4ck4life](https://www.twitter.com/h4ck4life)

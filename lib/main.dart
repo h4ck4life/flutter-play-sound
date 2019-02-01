@@ -31,14 +31,16 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
   String _buttonLabel = 'Ring!';
   MaterialColor _buttonColor = Colors.green;
   AudioPlayer _audioPlayer;
   bool _bellSwitch = false;
   Color _bellColor = Colors.black54;
-
   bool _isPlaying = false;
+
+  Animation<double> _animation;
+  AnimationController _animationController;
 
   void _playDingOnce() async {
     audioCache.play('DeskBell.mp3');
@@ -69,12 +71,28 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     accelerometerEvents.listen((AccelerometerEvent event) {
-      //print(event.toString());
       if (_bellSwitch) {
         if (event.x > 5.0 || event.x < -5.0) {
-          //_playBellSound();
+          _animationController..forward();
           _playDingOnce();
         }
+      }
+    });
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeIn,
+      reverseCurve: Curves.easeOut,
+    );
+
+    _animation.addListener((){
+      if(_animation.value > 0.05) {
+        _animationController..reverse();
       }
     });
   }
@@ -104,23 +122,28 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 )), */
             GestureDetector(
-              onTap: () {
-                if (_bellSwitch) {
-                  setState(() => _bellSwitch = false);
-                  setState(() => _bellColor = Colors.black54);
-                } else {
-                  setState(() => _bellSwitch = true);
-                  setState(() => _bellColor = Colors.transparent);
-                }
-              },
-              child: Image.asset('bell.png',
-                  colorBlendMode: BlendMode.srcATop, color: _bellColor),
-            ),
+                onTap: () {
+                  if (_bellSwitch) {
+                    _animationController..reset();
+                    setState(() => _bellSwitch = false);
+                    setState(() => _bellColor = Colors.black54);
+                  } else {
+                    _animationController..forward();
+                    setState(() => _bellSwitch = true);
+                    setState(() => _bellColor = Colors.transparent);
+                  }
+                },
+                child: RotationTransition(
+                  alignment: Alignment(0.0, 0.0),
+                  turns: _animation,
+                  child: Image.asset('bell.png',
+                      colorBlendMode: BlendMode.srcATop, color: _bellColor),
+                )),
             Container(
               padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
               child: Text(
                 'Made with ♥ by Alif',
-                style: TextStyle(color: Colors.white30, fontSize: 15),
+                style: TextStyle(color: Colors.white30, fontSize: 15, fontWeight: FontWeight.bold),
               ),
             )
           ],

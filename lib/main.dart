@@ -3,8 +3,6 @@ import "package:audioplayers/audio_cache.dart";
 import 'package:audioplayers/audioplayers.dart';
 import 'package:sensors/sensors.dart';
 
-AudioCache audioCache = new AudioCache();
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -32,6 +30,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  AudioCache audioCache = new AudioCache();
   AudioPlayer _audioPlayer;
   bool _bellSwitch = false;
   Color _bellColor = Colors.black54;
@@ -102,9 +101,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: null,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

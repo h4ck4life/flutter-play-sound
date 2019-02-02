@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'handbell',
       theme: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.green,
@@ -31,16 +31,16 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin {
-  String _buttonLabel = 'Ring!';
-  MaterialColor _buttonColor = Colors.green;
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   AudioPlayer _audioPlayer;
   bool _bellSwitch = false;
   Color _bellColor = Colors.black54;
   bool _isPlaying = false;
 
+  Animation<Color> _tweenColor;
   Animation<double> _animation;
   AnimationController _animationController;
+  AnimationController _colorAnimationController;
 
   void _playDingOnce() async {
     audioCache.play('DeskBell.mp3');
@@ -49,21 +49,15 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   void _playBellSound() async {
     if (_isPlaying == false) {
       setState(() => _isPlaying = true);
-      setState(() => _buttonLabel = 'Stop');
-      setState(() => _buttonColor = Colors.red);
       audioCache.play('Handbell-sound.mp3').then((audioPlayer) {
         setState(() => _audioPlayer = audioPlayer);
         audioPlayer.completionHandler = () {
           setState(() => _isPlaying = false);
-          setState(() => _buttonLabel = 'Ring!');
-          setState(() => _buttonColor = Colors.green);
         };
       });
     } else {
       _audioPlayer.stop();
       setState(() => _isPlaying = false);
-      setState(() => _buttonLabel = 'Ring!');
-      setState(() => _buttonColor = Colors.green);
     }
   }
 
@@ -90,10 +84,18 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       reverseCurve: Curves.easeOut,
     );
 
-    _animation.addListener((){
-      if(_animation.value > 0.05) {
+    _animation.addListener(() {
+      if (_animation.value > 0.05) {
         _animationController..reverse();
       }
+    });
+
+    _colorAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+    _tweenColor = ColorTween(begin: Colors.black54, end: Colors.transparent)
+        .animate(_colorAnimationController);
+    _tweenColor.addListener(() {
+      setState(() => _bellColor = _tweenColor.value);
     });
   }
 
@@ -107,30 +109,16 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            /* RaisedButton.icon(
-                icon: Icon(
-                  Icons.alarm,
-                  size: 50,
-                ),
-                onPressed: _playBellSound,
-                color: _buttonColor,
-                label: Container(
-                  padding: EdgeInsets.fromLTRB(40, 20, 40, 20),
-                  child: Text(
-                    _buttonLabel,
-                    style: TextStyle(color: Colors.white, fontSize: 50),
-                  ),
-                )), */
             GestureDetector(
                 onTap: () {
                   if (_bellSwitch) {
+                    _colorAnimationController..reverse();
                     _animationController..reset();
                     setState(() => _bellSwitch = false);
-                    setState(() => _bellColor = Colors.black54);
                   } else {
+                    _colorAnimationController..forward();
                     _animationController..forward();
                     setState(() => _bellSwitch = true);
-                    setState(() => _bellColor = Colors.transparent);
                   }
                 },
                 child: RotationTransition(
@@ -143,17 +131,15 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
               child: Text(
                 'Made with ♥ by Alif',
-                style: TextStyle(color: Colors.white30, fontSize: 15, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.white30,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold),
               ),
             )
           ],
         ),
       ),
-      /* floatingActionButton: FloatingActionButton(
-        onPressed: _playBellSound,
-        tooltip: 'Ring the bell',
-        child: Icon(Icons.audiotrack),
-      ), */
     );
   }
 }

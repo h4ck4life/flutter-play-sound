@@ -45,6 +45,7 @@ flutter:
     - Handbell-sound.mp3
     - DeskBell.mp3
     - bell.png
+    - 1012.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -101,42 +101,45 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: null,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            GestureDetector(
-                onTap: () {
-                  if (_bellSwitch) {
-                    _colorAnimationController..reverse();
-                    _animationController..reset();
-                    setState(() => _bellSwitch = false);
-                  } else {
-                    _colorAnimationController..forward();
-                    _animationController..forward();
-                    setState(() => _bellSwitch = true);
-                  }
-                },
-                child: RotationTransition(
-                  alignment: Alignment(0.0, 0.0),
-                  turns: _animation,
-                  child: Image.asset('bell.png',
-                      colorBlendMode: BlendMode.srcATop, color: _bellColor),
-                )),
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-              child: Text(
-                'Made with ♥ by Alif',
-                style: TextStyle(
-                    color: Colors.white30,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+        appBar: null,
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(image: AssetImage('1012.png'), repeat: ImageRepeat.repeat)),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                GestureDetector(
+                    onTap: () {
+                      if (_bellSwitch) {
+                        _colorAnimationController..reverse();
+                        _animationController..reset();
+                        setState(() => _bellSwitch = false);
+                      } else {
+                        _colorAnimationController..forward();
+                        _animationController..forward();
+                        setState(() => _bellSwitch = true);
+                      }
+                    },
+                    child: RotationTransition(
+                      alignment: Alignment(0.0, 0.0),
+                      turns: _animation,
+                      child: Image.asset('bell.png',
+                          colorBlendMode: BlendMode.srcATop, color: _bellColor),
+                    )),
+                Container(
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: Text(
+                    'Made with ♥ by Alif',
+                    style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
